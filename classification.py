@@ -7,6 +7,7 @@ from keras.layers.normalization import BatchNormalization
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 
+import re
 import numpy as np
 import glob
 from PIL import Image
@@ -37,13 +38,17 @@ def make(isTest):
     labels = []
 
     if isTest == 0:
-        read_data('./0-train', 0)
-        read_data('./1-train', 1)
-        read_data('./2-train', 2)
+        dirs = glob.glob('./train/*')
+        for dir in dirs:
+            match = re.search(r"[0-9]+", dir)
+            label = int(match.group())
+            read_data(dir, label)
     else:
-        read_data('./0-test', 0)
-        read_data('./1-test', 1)
-        read_data('./2-test', 2)
+        dirs = glob.glob('./test/*')
+        for dir in dirs:
+            match = re.search(r"[0-9]+", dir)
+            label = int(match.group())
+            read_data(dir, label)
 
     X_train = np.array(images)
     y_train = np.array(labels).reshape(-1, 1)
@@ -113,7 +118,7 @@ def main():
     y_train = np_utils.to_categorical(y_train, classes)
     y_test = np_utils.to_categorical(y_test, classes)
 
-    model = train(X_train, y_train, X_test, y_test)
+    train(X_train, y_train, X_test, y_test)
 
 if __name__ == '__main__':
     main()
