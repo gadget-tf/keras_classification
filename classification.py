@@ -40,12 +40,14 @@ def make(isTest):
     if isTest == 0:
         dirs = glob.glob('./train/*')
         for dir in dirs:
+            print(dir)
             match = re.search(r"[0-9]+", dir)
             label = int(match.group())
             read_data(dir, label)
     else:
         dirs = glob.glob('./test/*')
         for dir in dirs:
+            print(dir)
             match = re.search(r"[0-9]+", dir)
             label = int(match.group())
             read_data(dir, label)
@@ -116,7 +118,6 @@ def train(X_train, y_train, X_test, y_test):
 def main():
     global classes
     classes = len(glob.glob('./train/*'))
-    print(classes)
 
     X_train, y_train = make(0)
     X_test, y_test = make(1)
